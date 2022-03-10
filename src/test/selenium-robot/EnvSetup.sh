@@ -10,5 +10,5 @@ sh src/test/selenium-robot/Xvfb.sh start
 cd src/test/selenium-robot
 export DISPLAY=:99
 echo "Result-Start"
-pybot "PetclinicTestCases/$testtarget"
+pabot "PetclinicTestCases"
 echo "Result-End"

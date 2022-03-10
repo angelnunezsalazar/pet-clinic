@@ -1,4 +1,5 @@
 #!/bin/bash
+pip install -U robotframework-pabot
 robotenv=$(env  | grep robotenv | grep -oe '[^=]*$')
 testtarget=$(env  | grep testtarget | grep -oe '[^=]*$')
 echo "**Setup testing parameter for $robotenv**"

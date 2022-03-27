@@ -6,6 +6,7 @@ if (currentBuild.buildCauses.toString().contains('BranchIndexingCause')) {
 
 pipeline {
     agent none
+    triggers { cron( (BRANCH_NAME == "master") ? "@daily" : "" ) }
     stages {
         stage('Compile and Test') {
             agent any
@@ -18,6 +19,26 @@ pipeline {
             agent any
             steps {
                 junit 'target/surefire-reports/TEST-*.xml'
+            }
+        }
+
+        stage('Dependency check') {
+            agent any
+            steps {
+                sh "mvn --batch-mode dependency-check:check"
+            }
+            post {
+                always {
+                    dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+                    publishHTML(target:[
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'target',
+                        reportFiles: 'dependency-check-report.html',
+                        reportName: "OWASP Dependency Check Report"
+                    ])
+                }
             }
         }
         
